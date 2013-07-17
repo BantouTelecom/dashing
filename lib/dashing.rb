@@ -36,8 +36,8 @@ end
 
 if settings.respond_to?(:remote_backup_url)
   begin
-    response = Net::HTTP.get URI(settings.remote_backup_url)
-    set history: JSON.parse(response)
+    backup_response = Net::HTTP.get URI(settings.remote_backup_url)
+    set history: JSON.parse(backup_response)
   rescue
     set history: {}
   end
