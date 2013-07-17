@@ -6,6 +6,7 @@ require 'coffee-script'
 require 'sass'
 require 'json'
 require 'yaml'
+require 'net/http'
 
 SCHEDULER = Rufus::Scheduler.start_new
 
@@ -20,14 +21,27 @@ end
 
 set server: 'thin', connections: [], history_file: 'history.yml'
 
+set remote_backup_url: ENV['remote_backup_url']
+
 # Persist history in tmp file at exit
 at_exit do
-  File.open(settings.history_file, 'w') do |f|
-    f.puts settings.history.to_yaml
+  if settings.respond_to?(:remote_backup_url)
+    Net::HTTP.post_form URI(settings.remote_backup_url), 'data' => settings.history.to_json
+  else
+    File.open(settings.history_file, 'w') do |f|
+      f.puts settings.history.to_yaml
+    end
   end
 end
 
-if File.exists?(settings.history_file)
+if settings.respond_to?(:remote_backup_url)
+  begin
+    response = Net::HTTP.get URI(settings.remote_backup_url)
+    set history: JSON.parse(response)
+  rescue
+    set history: {}
+  end
+elsif File.exists?(settings.history_file)
   set history: YAML.load_file(settings.history_file)
 else
   set history: {}
