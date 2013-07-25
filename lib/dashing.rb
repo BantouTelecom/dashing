@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'sinatra'
 require 'sprockets'
 require 'sinatra/content_for'
