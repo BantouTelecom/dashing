@@ -98,7 +98,7 @@ end
 
 post '/widgets/:id' do
   request.body.rewind
-  body =  JSON.parse(request.body.force_encoding('UTF-8').read)
+  body =  JSON.parse(request.body.read)
   auth_token = body.delete("auth_token")
   if !settings.auth_token || settings.auth_token == auth_token
     send_event(params['id'], body)
