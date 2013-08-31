@@ -9,6 +9,8 @@ Distributed under the [MIT license](https://github.com/Shopify/dashing/blob/mast
 
 # Enabling Remote Backups
 
+By Akash Manohar [HashNuke](https://github.com/HashNuke/).
+
 Change your app's gem source in the Gemfile to this:
 
 ```ruby
